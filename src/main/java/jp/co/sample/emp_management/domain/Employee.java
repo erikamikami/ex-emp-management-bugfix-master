@@ -19,6 +19,8 @@ public class Employee {
 	private String gender;
 	/** 入社日 */
 	private Date hireDate;
+	/** 入社日 */
+	private String hireDateString;
 	/** メールアドレス */
 	private String mailAddress;
 	/** 郵便番号 */
@@ -156,6 +158,20 @@ public class Employee {
 	}
 
 	/**
+	 * @param hireDateString the hireDateString to set
+	 */
+	public String getHireDateString() {
+		return hireDateString;
+	}
+
+	/**
+	 * @param hireDateString the hireDateString to set
+	 */
+	public void setHireDateString(String hireDateString) {
+		this.hireDateString = hireDateString;
+	}
+
+	/**
 	 * @return the mailAddress
 	 */
 	public String getMailAddress() {
@@ -256,9 +272,9 @@ public class Employee {
 	@Override
 	public String toString() {
 		return "Employee [id=" + id + ", name=" + name + ", image=" + image + ", gender=" + gender + ", hireDate="
-				+ hireDate + ", mailAddress=" + mailAddress + ", zipCode=" + zipCode + ", address=" + address
-				+ ", telephone=" + telephone + ", salary=" + salary + ", characteristics=" + characteristics
-				+ ", dependentsCount=" + dependentsCount + "]";
+				+ hireDate + ", hireDateString=" + hireDateString + ", mailAddress=" + mailAddress + ", zipCode="
+				+ zipCode + ", address=" + address + ", telephone=" + telephone + ", salary=" + salary
+				+ ", characteristics=" + characteristics + ", dependentsCount=" + dependentsCount + "]";
 	}
 	
 }

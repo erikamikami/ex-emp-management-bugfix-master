@@ -58,6 +58,8 @@ public class EmployeeController {
 	@RequestMapping("/showList")
 	public String showList(Model model) {
 		List<Employee> employeeList = employeeService.showList();
+		// 入社日の表記を「●●●●年●●月●●日」というフォーマットに変える
+		employeeList = EmployeeDisplayController.changeHireDateFmt(employeeList);
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
@@ -76,6 +78,8 @@ public class EmployeeController {
 	@RequestMapping("/showDetail")
 	public String showDetail(String id, Model model) {
 		Employee employee = employeeService.showDetail(Integer.parseInt(id));
+		// 入社日の表記を「●●●●年●●月●●日」というフォーマットに変える
+		employee = EmployeeDisplayController.changeHireDateFmt(employee);
 		model.addAttribute("employee", employee);
 		return "employee/detail";
 	}
