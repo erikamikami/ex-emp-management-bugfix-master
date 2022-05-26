@@ -14,13 +14,13 @@ $(function() {
 			},
 			async: true,
 		}).done(function(data) {
-			console.log(data);
-			console.dir(JSON.stringify(data));
-			console.log("password=" + password);
-			console.log("confirmationPasswordField=" + confirmationPasswordField);
+			/*console.log(data);*/
+			/*console.dir(JSON.stringify(data));*/
+			/*console.log("password=" + password);*/
+			/*console.log("confirmationPasswordField=" + confirmationPasswordField);*/
 			$("#confirmationPasswordResult").text(data.resultMessage);
 		}).fail(function(XMLHttpRequest, textStatus, errorThrown){
-			alert("エラー");
+			/*alert("エラー");*/
 			console.log("XMLHttpRequest:" + XMLHttpRequest);
 			console.log("textStatus:" + textStatus);
 			console.log("errorThrown:" + errorThrown);
