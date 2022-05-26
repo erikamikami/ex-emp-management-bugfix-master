@@ -74,9 +74,15 @@ public class AdministratorController {
 	 * @return ログイン画面へリダイレクト
 	 */
 	@RequestMapping("/insert")
-	public String insert(@Validated InsertAdministratorForm form, BindingResult result, Model model) {
+	public String insert(@Validated InsertAdministratorForm form, BindingResult result,
+			String confirmationPasswordField, Model model) {
 		if (result.hasErrors()) {
 			return toInsert();
+		}
+		// jsが無効になっていた時用のエラー表示
+		if (!(confirmationPasswordField.equals(form.getPassword()))) {
+			model.addAttribute("differentPassword", "同じ値を入力してください");
+			return "administrator/insert";
 		}
 		Administrator administrator = new Administrator();
 		// フォームからドメインにプロパティ値をコピー
@@ -87,7 +93,6 @@ public class AdministratorController {
 			administratorService.insert(administrator);
 		} catch (DuplicateKeyException e) {
 			model.addAttribute("mailaddressDuplicationError", "このメールアドレスでは登録できません");
-			System.out.println("!!!!!!");
 			return "administrator/insert";
 		}
 		return "redirect:/";

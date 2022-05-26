@@ -80,6 +80,20 @@
                   </div>
                 </div>
               </div>
+               <!-- パスワード確認欄 -->
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <label for="password">
+                      パスワード（確認）:
+                    </label>
+                    <label id="confirmationPasswordResult" class="error-messages"></label>
+                    <!-- ▼▼　jsが無効になっていた時用のエラー表示 ▼▼ -->
+                    <label class="error-messages" th:text="${differentPassword}"></label>
+                    <input id="confirmationPasswordField" type="password" name="confirmationPasswordField" class="form-control" placeholder="password">
+                  </div>
+                </div>
+              </div>
               <!-- 登録ボタン -->
               <div class="form-group">
                 <div class="row">
@@ -102,6 +116,7 @@
   <script
     src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="../../static/js/bootstrap.min.js"></script>
+  <script src="../../static/js/check.js" th:src="@{/js/check.js}"></script>
 </body>
 </html>
 
