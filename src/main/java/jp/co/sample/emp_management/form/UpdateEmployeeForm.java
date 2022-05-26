@@ -11,6 +11,7 @@ import javax.validation.constraints.Pattern;
 public class UpdateEmployeeForm {
 	/** id */
 	private String id;
+
 	/** 扶養人数 */
 	// 入力値チェック 要件
 	// ・数字であれば受け付ける（半角・全角問わない）
@@ -28,7 +29,8 @@ public class UpdateEmployeeForm {
 	}
 
 	/**
-	 * 扶養人数を数値として返します.
+	 * 扶養人数を数値として返します.<br>
+	 * 扶養人数の更新時は、空欄であっても受け付けるため、nullの場合は0を返すように実装しています。
 	 * 
 	 * @return 数値の扶養人数
 	 */
