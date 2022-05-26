@@ -11,8 +11,12 @@ import javax.validation.constraints.Pattern;
 public class UpdateEmployeeForm {
 	/** id */
 	private String id;
+
 	/** 扶養人数 */
-	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は数値で入力してください")
+	// 入力値チェック 要件
+	// ・数字であれば受け付ける（半角・全角問わない）
+	// ・空欄でも許容
+	@Pattern(regexp = "^[0-9０-９]+$", message = "扶養人数は数値で入力してください")
 	private String dependentsCount;
 
 	/**
@@ -25,11 +29,15 @@ public class UpdateEmployeeForm {
 	}
 
 	/**
-	 * 扶養人数を数値として返します.
+	 * 扶養人数を数値として返します.<br>
+	 * 扶養人数の更新時は、空欄であっても受け付けるため、nullの場合は0を返すように実装しています。
 	 * 
 	 * @return 数値の扶養人数
 	 */
 	public Integer getIntDependentsCount() {
+		if (dependentsCount == null) {
+			dependentsCount = "0";
+		}
 		return Integer.parseInt(dependentsCount);
 	}
 
