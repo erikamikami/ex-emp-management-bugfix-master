@@ -33,6 +33,9 @@ public class UpdateEmployeeForm {
 	 * @return 数値の扶養人数
 	 */
 	public Integer getIntDependentsCount() {
+		if (dependentsCount == null) {
+			dependentsCount = "0";
+		}
 		return Integer.parseInt(dependentsCount);
 	}
 

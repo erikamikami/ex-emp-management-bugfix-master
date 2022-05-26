@@ -97,12 +97,7 @@ public class EmployeeController {
 		}
 		Employee employee = new Employee();
 		employee.setId(form.getIntId());
-		// 扶養人数はnullでも許容するので、nullだった場合は0を登録する。
-		try {
-			employee.setDependentsCount(form.getIntDependentsCount());
-		} catch (NumberFormatException e) {
-			employee.setDependentsCount(0);
-		}
+		employee.setDependentsCount(form.getIntDependentsCount());
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
 	}
