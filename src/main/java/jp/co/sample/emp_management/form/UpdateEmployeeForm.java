@@ -12,7 +12,10 @@ public class UpdateEmployeeForm {
 	/** id */
 	private String id;
 	/** 扶養人数 */
-	@Pattern(regexp = "^[0-9]+$", message = "扶養人数は数値で入力してください")
+	// 入力値チェック 要件
+	// ・数字であれば受け付ける（半角・全角問わない）
+	// ・空欄でも許容
+	@Pattern(regexp = "^[0-9０-９]+$", message = "扶養人数は数値で入力してください")
 	private String dependentsCount;
 
 	/**
