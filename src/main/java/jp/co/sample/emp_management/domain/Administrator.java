@@ -1,5 +1,10 @@
 package jp.co.sample.emp_management.domain;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 /**
  * 管理者情報を表すドメイン.
  * 
