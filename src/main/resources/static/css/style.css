@@ -9,3 +9,23 @@
 .error-messages {
 	color: #ff0000;
 }
+
+/* ▼▼ 追加 ▼▼ */
+
+.sorrryimg{
+	width: 40%;
+	height: 40%;
+	float: left;
+}
+
+.httpResponseContents{
+	display: flex;
+	text-align:center;
+
+}
+
+.httpResponseContent{
+	padding-top: 100px;
+}
+
+
