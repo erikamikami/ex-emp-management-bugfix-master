@@ -90,7 +90,7 @@ public class AdministratorController {
 			System.out.println("!!!!!!");
 			return "administrator/insert";
 		}
-		return "administrator/login";
+		return "redirect:/";
 	}
 
 	/////////////////////////////////////////////////////
