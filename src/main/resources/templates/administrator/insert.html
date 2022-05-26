@@ -56,7 +56,8 @@
                     <label for="mailAddress">
                       メールアドレス:
                     </label>
-                    <label th:if="${#fields.hasErrors('mailAddress')}" th:errors="*{mailAddress}" class="error-messages">
+                    <label class="error-messages" th:text="${mailaddressDuplicationError}"></label>
+                    <label th:if="${#fields.hasErrors('mailAddress')}" th:errors="*{mailAddress}" class="error-messages" >
                       メールアドレスを入力してください
                     </label>
                     <input type="text" name="mailAddress" id="mailAddress" class="form-control" placeholder="yamada@mail.com"
