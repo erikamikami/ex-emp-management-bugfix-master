@@ -9,3 +9,18 @@
 .error-messages {
 	color: #ff0000;
 }
+
+
+.serchByNameForm{
+	padding: 0 0 30px 0;
+}
+
+.serchByNameFormHeder{
+	font-size:18px;
+	font-weight: bold;
+}
+
+.serchByNameResult{
+	display: none;
+}
+

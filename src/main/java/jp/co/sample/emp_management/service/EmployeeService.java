@@ -3,6 +3,8 @@ package jp.co.sample.emp_management.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,5 +53,15 @@ public class EmployeeService {
 	 */
 	public void update(Employee employee) {
 		employeeRepository.update(employee);
+	}
+
+	/**
+	 * 名前のあいまい検索で従業員を取得します.<br>
+	 * 
+	 * @param partOfName(検索したい名前の一部）
+	 * @return List<Employee> (該当がない場合、size0のListが返る）
+	 */
+	public List<Employee> serchByName(String partOfName) {
+		return employeeRepository.serchByName(partOfName);
 	}
 }

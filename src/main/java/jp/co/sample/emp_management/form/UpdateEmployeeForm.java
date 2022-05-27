@@ -18,6 +18,7 @@ public class UpdateEmployeeForm {
 	@Pattern(regexp = "^[0-9０-９]+$", message = "扶養人数は数値で入力してください")
 	private String dependentsCount;
 
+
 	/**
 	 * IDを数値として返します.
 	 * 
@@ -68,5 +69,6 @@ public class UpdateEmployeeForm {
 	public String toString() {
 		return "UpdateEmployeeForm [id=" + id + ", dependentsCount=" + dependentsCount + "]";
 	}
+
 
 }
