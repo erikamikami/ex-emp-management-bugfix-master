@@ -96,7 +96,7 @@ public class EmployeeRepository {
 				+ " FROM employees"
 				+ " WHERE name LIKE :partOfName";
 
-		SqlParameterSource param = new MapSqlParameterSource().addValue("partOfName", partOfName);
+		SqlParameterSource param = new MapSqlParameterSource().addValue("partOfName", "%" + partOfName + "%");
 
 		List<Employee> employees = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 		return employees;

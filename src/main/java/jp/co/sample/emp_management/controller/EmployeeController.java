@@ -12,8 +12,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jp.co.sample.emp_management.domain.Employee;
+import jp.co.sample.emp_management.form.SerchEmployeeForm;
 import jp.co.sample.emp_management.form.UpdateEmployeeForm;
 import jp.co.sample.emp_management.service.EmployeeService;
 
@@ -44,6 +46,11 @@ public class EmployeeController {
 	@ModelAttribute
 	public UpdateEmployeeForm setUpForm() {
 		return new UpdateEmployeeForm();
+	}
+
+	@ModelAttribute
+	public SerchEmployeeForm serchForm() {
+		return new SerchEmployeeForm();
 	}
 
 	/////////////////////////////////////////////////////
@@ -105,5 +112,40 @@ public class EmployeeController {
 		}
 		employeeService.update(employee);
 		return "redirect:/employee/showList";
+	}
+
+	/////////////////////////////////////////////////////
+	// ユースケース：従業員を従業員名であいまい検索する
+	/////////////////////////////////////////////////////
+	/**
+	 * 従業員を従業員名であいまい検索します
+	 * 
+	 * @param partOfName
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/serchByName")
+	public String serchByName(SerchEmployeeForm serchEmployeeForm, RedirectAttributes redirectAttributes, Model model) {
+		String partOfName = serchEmployeeForm.getPartOfName();
+		// 検索フォームに入力された文字列が空であった場合は、全件検索結果を表示させる
+		try {
+			partOfName.isEmpty();
+		} catch (NullPointerException e) {
+			return showList(model);
+		}
+		
+
+		List<Employee> serchByNameResult = employeeService.serchByName(partOfName);
+		
+		// 指定した文字列が存在しなかった場合、「１件もありませんでした」というメッセージと共に全件検索結果を表示させる
+		if (serchByNameResult.size() == 0) {
+			List<Employee> employeeList = employeeService.showList();
+			model.addAttribute("employeeList", employeeList);
+			model.addAttribute("notResultMessage", "１件もありませんでした");
+			return "employee/list";
+		}
+		
+		model.addAttribute("serchByNameResult", serchByNameResult);
+		return "employee/list";
 	}
 }
