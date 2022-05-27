@@ -85,7 +85,8 @@ public class EmployeeRepository {
 	}
 
 	/**
-	 * 名前のあいまい検索で従業員を取得します.
+	 * 名前のあいまい検索で従業員を取得します.<br>
+	 * 空文字で検索した場合、全件検索結果を表示させます
 	 * 
 	 * @param partOfName(検索したい名前の一部）
 	 * @return List<Employee>
@@ -96,6 +97,7 @@ public class EmployeeRepository {
 				+ " WHERE name LIKE :partOfName";
 
 		SqlParameterSource param = new MapSqlParameterSource().addValue("partOfName", partOfName);
+
 		List<Employee> employees = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 		return employees;
 	}
