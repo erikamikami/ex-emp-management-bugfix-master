@@ -87,7 +87,6 @@ public class AdministratorController {
 			administratorService.insert(administrator);
 		} catch (DuplicateKeyException e) {
 			model.addAttribute("mailaddressDuplicationError", "このメールアドレスでは登録できません");
-			System.out.println("!!!!!!");
 			return "administrator/insert";
 		}
 		return "redirect:/";
@@ -122,7 +121,7 @@ public class AdministratorController {
 			model.addAttribute("errorMessage", "メールアドレスまたはパスワードが不正です。");
 			return toLogin();
 		}
-		return "forward:/employee/showList";
+		return "forward:/employee/paging";
 	}
 	
 	/////////////////////////////////////////////////////
