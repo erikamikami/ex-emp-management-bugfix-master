@@ -96,21 +96,13 @@
               </td>
             </tr>
           </tbody>
-        </table>
 
 
 <!-- ここから下を編集する必要はありません -->
 
 <!-- 名前のあいまい検索した結果を下記に表示させます -->
        <div th:styleappend = "${serchByNameResult} ? 'display: block;'" class="serchByNameResult">
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th>従業員名</th>
-              <th>入社日</th>
-              <th>扶養人数</th>
-            </tr>
-          </thead>
+        
           <tbody>
             <tr th:each="employee : ${serchByNameResult}">
               <td>
