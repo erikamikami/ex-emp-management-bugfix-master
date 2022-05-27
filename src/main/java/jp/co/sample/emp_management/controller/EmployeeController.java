@@ -1,5 +1,6 @@
 package jp.co.sample.emp_management.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +38,7 @@ public class EmployeeController {
 
 	@Autowired
 	private EmployeeService employeeService;
-	
+
 	/**
 	 * 使用するフォームオブジェクトをリクエストスコープに格納する.
 	 * 
@@ -64,19 +65,24 @@ public class EmployeeController {
 	 */
 	@RequestMapping("/showList")
 	public String showList(Model model) {
-		List<Employee> employeeList = employeeService.showList();
+		// 現在のページがnullの場合（初期表示の場合）、現在のページを1とする。
+		String nowpage = (String) model.getAttribute("nowpage");
+		if (nowpage == null) {
+			nowpage = "1";
+		}
+		model.addAttribute("nowpage", nowpage);
+		List<Employee> employeeList = employeeService.showList(1);
 		model.addAttribute("employeeList", employeeList);
 		return "employee/list";
 	}
 
-	
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を表示する
 	/////////////////////////////////////////////////////
 	/**
 	 * 従業員詳細画面を出力します.
 	 * 
-	 * @param id リクエストパラメータで送られてくる従業員ID
+	 * @param id    リクエストパラメータで送られてくる従業員ID
 	 * @param model モデル
 	 * @return 従業員詳細画面
 	 */
@@ -86,20 +92,19 @@ public class EmployeeController {
 		model.addAttribute("employee", employee);
 		return "employee/detail";
 	}
-	
+
 	/////////////////////////////////////////////////////
 	// ユースケース：従業員詳細を更新する
 	/////////////////////////////////////////////////////
 	/**
 	 * 従業員詳細(ここでは扶養人数のみ)を更新します.
 	 * 
-	 * @param form
-	 *            従業員情報用フォーム
+	 * @param form 従業員情報用フォーム
 	 * @return 従業員一覧画面へリダクレクト
 	 */
 	@RequestMapping("/update")
 	public String update(@Validated UpdateEmployeeForm form, BindingResult result, Model model) {
-		if(result.hasErrors()) {
+		if (result.hasErrors()) {
 			return showDetail(form.getId(), model);
 		}
 		Employee employee = new Employee();
@@ -131,21 +136,93 @@ public class EmployeeController {
 		try {
 			partOfName.isEmpty();
 		} catch (NullPointerException e) {
-			return showList(model);
+			return "forward:/employee/paging";
 		}
-		
 
 		List<Employee> serchByNameResult = employeeService.serchByName(partOfName);
-		
+
 		// 指定した文字列が存在しなかった場合、「１件もありませんでした」というメッセージと共に全件検索結果を表示させる
 		if (serchByNameResult.size() == 0) {
-			List<Employee> employeeList = employeeService.showList();
-			model.addAttribute("employeeList", employeeList);
-			model.addAttribute("notResultMessage", "１件もありませんでした");
-			return "employee/list";
+			String notResultMessage = "「" + partOfName + "」" + "の検索結果は１件もありませんでした";
+			redirectAttributes.addFlashAttribute("notResultMessage", notResultMessage);
+			return "redirect:/employee/paging";
 		}
-		
+
 		model.addAttribute("serchByNameResult", serchByNameResult);
 		return "employee/list";
+	}
+
+	/////////////////////////////////////////////////////
+	// ユースケース：従業員一覧画面のページング処理
+	/////////////////////////////////////////////////////
+	/**
+	 * ページング処理を行う.
+	 * 
+	 * @param nowpage   今いるページ番号
+	 * @param nextbox   次に行きたいページ番号（押下されなければnull）
+	 * @param beforeFlg 「前へ」が押下されたかどうかの判定フラグ（押下されなければnull）
+	 * @param nextFlg   「次へ」が押下されたかどうかの判定フラグ（押下されなければnull）
+	 * @param model
+	 * @return String
+	 */
+	@RequestMapping("/paging")
+	public String paging(String nowpage, String nextbox, String beforeFlg, String nextFlg, Model model) {
+		
+		// いくつのページボックスが必要なのかを一番最初に把握する
+		List<Integer> pagingBoxesList = new LinkedList<>();
+		List<Integer> temporary = (List<Integer>) model.getAttribute("pagingBoxesList");
+		if (temporary == null) {
+			List<Integer> pagingBoxesSizeList = employeeService.countPagingBox();
+			Integer pagingBoxesSize = pagingBoxesSizeList.get(0);
+			Integer pagingBoxes = pagingBoxesSize / 10;
+			if ((pagingBoxesSize / 10) != 0) {
+				pagingBoxes++;
+			}
+			for (int i = 1; i <= pagingBoxes; i++) {
+				pagingBoxesList.add(i);
+			}
+		}
+		// 最大のページボックスの数字を得る
+		Integer maxPagingBox = pagingBoxesList.get(pagingBoxesList.size() - 1);
+		model.addAttribute("maxPagingBox", maxPagingBox);
+		model.addAttribute("pagingBoxesList", pagingBoxesList);
+
+		// もしnowpageがnullだったら（はじめて従業員一覧ページを開いた時だったら）、1をセットする
+		if (nowpage == null) {
+			nowpage = "1";
+			model.addAttribute("nowpage", nowpage);
+		}
+
+		// ページ番号（nextbox）が押下されたら、そのページ番号でSQLのオフセットを実行する。nowページも更新する。
+		if (!(nextbox == null)) {
+			Integer nextboxInteger = Integer.parseInt(nextbox);
+			List<Employee> employeeList = employeeService.showList(nextboxInteger);
+			model.addAttribute("employeeList", employeeList);
+			nowpage = nextbox;
+			model.addAttribute("nowpage", nowpage);
+			return "employee/list";
+		}
+
+		// 「前へ」が押下されたら、今のページ番号-1でSQLのオフセットを実行する。nowページも更新する。
+		if (!(beforeFlg == null)) {
+			Integer nowpageInteger = Integer.parseInt(nowpage);
+			nowpageInteger--;
+			List<Employee> employeeList = employeeService.showList(nowpageInteger);
+			model.addAttribute("employeeList", employeeList);
+			model.addAttribute("nowpage", nowpageInteger);
+			return "employee/list";
+		}
+
+		// 「次へ」が押下されたら、今のページ番号+1でSQLのオフセットを実行する。nowページも更新する。
+		if (!(nextFlg == null)) {
+			Integer nowpageInteger = Integer.parseInt(nowpage);
+			nowpageInteger++;
+			List<Employee> employeeList = employeeService.showList(nowpageInteger);
+			model.addAttribute("employeeList", employeeList);
+			model.addAttribute("nowpage", nowpageInteger);
+			return "employee/list";
+		}
+
+		return showList(model);
 	}
 }

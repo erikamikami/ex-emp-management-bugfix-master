@@ -29,8 +29,8 @@ public class EmployeeService {
 	 * 
 	 * @return　従業員情報一覧
 	 */
-	public List<Employee> showList() {
-		List<Employee> employeeList = employeeRepository.findAll();
+	public List<Employee> showList(Integer pageNumber) {
+		List<Employee> employeeList = employeeRepository.findAll(pageNumber);
 		return employeeList;
 	}
 	
@@ -63,5 +63,14 @@ public class EmployeeService {
 	 */
 	public List<Employee> serchByName(String partOfName) {
 		return employeeRepository.serchByName(partOfName);
+	}
+
+	/**
+	 * Paging処理する際のPageBoxがいくつ必要なのかを取得する.
+	 * 
+	 * @return List<Integer>
+	 */
+	public List<Integer> countPagingBox() {
+		return employeeRepository.countPagingBox();
 	}
 }

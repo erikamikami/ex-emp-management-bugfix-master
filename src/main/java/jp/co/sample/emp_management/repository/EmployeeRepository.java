@@ -41,18 +41,32 @@ public class EmployeeRepository {
 		return employee;
 	};
 
+	/**
+	 * 集約関数を返すためのローマッパー.
+	 */
+	private static final RowMapper<Integer> AGGREGATE_FUNCTION_ROW_MAPPER = (rs, i) -> {
+		Integer count = rs.getInt("count");
+		return count;
+	};
+
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 
+
+
 	/**
-	 * 従業員一覧情報を入社日順で取得します.
+	 * 従業員一覧情報を入社日順で取得します. <br>
+	 * ページング機能付き
 	 * 
 	 * @return 全従業員一覧 従業員が存在しない場合はサイズ0件の従業員一覧を返します
 	 */
-	public List<Employee> findAll() {
-		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees";
-
-		List<Employee> developmentList = template.query(sql, EMPLOYEE_ROW_MAPPER);
+	public List<Employee> findAll(Integer pageNumber) {
+		if (pageNumber == null) {
+			pageNumber = 1;
+		}
+		String sql = "SELECT id,name,image,gender,hire_date,mail_address,zip_code,address,telephone,salary,characteristics,dependents_count FROM employees ORDER BY hire_date OFFSET 10 * (:pageNumber - 1) LIMIT 10";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("pageNumber", pageNumber);
+		List<Employee> developmentList = template.query(sql, param, EMPLOYEE_ROW_MAPPER);
 
 		return developmentList;
 	}
@@ -102,4 +116,14 @@ public class EmployeeRepository {
 		return employees;
 	}
 	
+	/**
+	 * Paging処理する際のPageBoxがいくつ必要なのかを取得する.
+	 * 
+	 * @return List<Integer>
+	 */
+	public List<Integer> countPagingBox() {
+		String sql = "SELECT count(*) FROM employees";
+		return template.query(sql, AGGREGATE_FUNCTION_ROW_MAPPER);
+	}
+
 }
